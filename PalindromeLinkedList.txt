@@ -1,0 +1,70 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+ //approach - 1 - time complexity - O(n), space complexity - O(n)
+// class Solution {
+// public:
+//     ListNode* reverseLL(ListNode* &head) {
+//         if(head == NULL || head->next == NULL) {
+//             return head;
+//         }
+//         ListNode* last = reverseLL(head->next);
+
+//         head->next->next = head;
+//         head->next = NULL;
+
+//         return last;
+//     }
+//     bool isPalindrome(ListNode* head) {
+//         if(head == NULL || head->next == NULL) {
+//             return true;
+//         }
+//         ListNode* slow = head;
+//         ListNode* fast = head;
+//         while(fast != NULL && fast->next != NULL) {
+//             slow = slow->next;
+//             fast = fast->next->next;
+//         }
+//         slow = reverseLL(slow);
+
+//         ListNode* temp = head;
+//         while(slow != NULL) {
+//             if(temp->val != slow->val) {
+//                 return false;
+//             }
+//             slow = slow->next;
+//             temp = temp->next;
+//         }
+//         return true;
+//     }
+// };
+
+
+
+//approach - 2 - time complexity - O(n), space complexit - O(1)
+class Solution {
+public:
+    bool check(ListNode* &head, ListNode* &curr) {
+        if(head == NULL) {
+            return true;
+        }
+        bool result = check(head->next, curr);
+        if(curr->val != head->val) {
+            return false;
+        }
+        curr = curr->next;
+
+        return result;
+    }
+    bool isPalindrome(ListNode* head) {
+        ListNode* curr = head;
+        return check(head, curr); 
+    }
+};
