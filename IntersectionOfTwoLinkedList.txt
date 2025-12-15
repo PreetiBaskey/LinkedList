@@ -1,0 +1,86 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+
+//approach - 1 - time complexity - O(m + n), space complexit - O(m)
+// class Solution {
+// public:
+//     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+//         unordered_set<ListNode*> st;
+//         ListNode* tempA = headA;
+//         while(tempA != NULL) {
+//             st.insert(tempA);
+//             tempA = tempA->next;
+//         }
+
+//         while(headB != NULL) {
+//             if(st.find(headB) != st.end()) {
+//                 return headB;
+//             }
+//             headB = headB->next;
+//         }
+
+//         return NULL;
+//     }
+// };
+
+
+
+//approach - 2 - time complexity - O(m + n), space complexity - O(1)
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        //calculting list A nodes
+        int m = 0;
+        ListNode* tempA = headA;
+        while(tempA != NULL) {
+            m++;
+            tempA = tempA->next;
+        }
+
+        //calculating list B nodes
+        int n = 0;
+        ListNode* tempB = headB;
+        while(tempB != NULL) {
+            n++;
+            tempB = tempB->next;
+        }
+
+        //node count difference
+        int diff = abs(m - n);
+
+        //which has greater node length?
+        char grtr = m > n ? 'm' : 'n';
+
+        //taking tempA and tempB to the difference position on both lists
+        tempA = headA;
+        tempB = headB;
+        if(grtr == 'm') {
+            while(diff--) {
+                tempA = tempA->next;
+            } 
+        }
+        else {
+            while(diff--) {
+                tempB = tempB->next;
+            }
+        }
+
+        //looking for the intersection now 
+        while(tempA != tempB) {
+            tempA = tempA->next;
+            tempB = tempB->next;
+        }
+        
+        //if found then return any tempA or tempB
+        if(tempA == tempB) return tempA;
+
+        //else return NULL, as do not have intersection node
+        return NULL;
+    }
+};
