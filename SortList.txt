@@ -1,0 +1,93 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+//approach - 1 - time complexity - O(nlogn), space complexity - O(n)
+// class Solution {
+// public:
+//     ListNode* sortList(ListNode* head) {
+//         //storing nodes value in integer vector
+//         ListNode* temp =  head;
+//         vector<int> arr;
+//         while(temp != NULL) {
+//             arr.push_back(temp->val);
+//             temp = temp->next;
+//         }
+
+//         //sorting the array
+//         sort(arr.begin(), arr.end());
+
+//         //creating dummy head
+//         ListNode* dummyHead = new ListNode(-1);
+//         ListNode* tempHead = dummyHead;
+
+//         //creating sorted linked list using sorted array
+//         for(int &val: arr) {
+//             ListNode* newNode = new ListNode(val);
+//             tempHead->next = newNode;
+//             tempHead = tempHead->next;
+//         }
+//         tempHead->next = NULL;
+
+//         //returning head of newly created linked list
+//         return dummyHead->next;
+//     }
+// };
+
+//approach - 2 - time complexity - O(nlogn), space complexity - O(1)
+class Solution {
+public:
+    ListNode* getMidNode(ListNode* head) {
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+        while(fast != NULL && fast->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        return slow;
+    }
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode* dummyHead = new ListNode(-1);
+        ListNode* tempNode = dummyHead;
+        while(l1 != NULL && l2 != NULL) {
+            if(l1->val < l2->val) {
+                tempNode->next = l1;
+                l1 = l1->next;
+            }
+            else {
+                tempNode->next = l2;
+                l2 = l2->next;
+            }
+            tempNode = tempNode->next;
+        }
+        if(l1 != NULL) {
+            tempNode->next = l1;
+        }
+        else {
+            tempNode->next = l2;
+        }
+
+        return dummyHead->next;
+    }
+    ListNode* sortList(ListNode* head) {
+        if(head == NULL || head->next == NULL) {
+            return head;
+        }
+         ListNode* mid = getMidNode(head);
+         ListNode* leftHead = head;
+         ListNode* rightHead = mid->next;
+         mid->next = NULL;
+
+         ListNode* l1 = sortList(leftHead);
+         ListNode* l2 = sortList(rightHead);
+
+         return mergeTwoLists(l1, l2);
+    }
+};
